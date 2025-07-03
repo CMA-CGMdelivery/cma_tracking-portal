@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal de Seguimiento CMA CGM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fb;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    header img {
+      height: 50px;
+      vertical-align: middle;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #003366;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      padding: 12px;
+      width: 70%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 12px 20px;
+      background-color: #0055a5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #003f7d;
+    }
+    .btn-print {
+      float: right;
+      margin-top: -40px;
+      margin-bottom: 20px;
+      background-color: #0077c8;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 16px;
+      border: 1px solid #003366;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border: 1px solid #003366;
+    }
+    th {
+      background-color: #f0f5fa;
+      color: #003366;
+      width: 30%;
+    }
+    .horizontal-package-table th, .horizontal-package-table td {
+      text-align: center;
+    }
+    .horizontal-package-table th {
+      background-color: #f0f5fa;
+      color: #003366;
+    }
+    .progress-bar {
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 30px;
+    }
+    .progress {
+      height: 24px;
+      background: linear-gradient(to right, #0055a5, #0077c8);
+      color: white;
+      text-align: center;
+      line-height: 24px;
+      font-weight: bold;
+      width: 70%;
+      transition: width 1s ease-in-out;
+      animation: pulse 2s infinite;
+    }
+    .sender-receiver {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 40px;
+      animation: bounceIn 1.5s;
+    }
+    .sender-receiver div {
+      background: #e9f2fb;
+      padding: 20px;
+      border-radius: 12px;
+      width: 48%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .sender-receiver h4 {
+      margin-top: 0;
+    }
+    @keyframes pulse {
+      0% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+      100% { filter: brightness(1); }
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    iframe {
+      width: 100%;
+      height: 450px;
+      margin-top: 30px;
+      border-radius: 12px;
+      border: none;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 20px;
+      color: #003366;
+      font-weight: bold;
+      padding: 20px;
+      border-top: 2px solid #ccc;
+    }
+    .notification {
+      background-color: #dff0d8;
+      border-left: 6px solid #3c763d;
+      padding: 10px 20px;
+      margin-top: 20px;
+      border-radius: 6px;
+      color: #3c763d;
+    }
+    .distance-info {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #444;
+    }
+    .flyover {
+      animation: fly 3s ease-in-out infinite;
+      display: inline-block;
+      margin-left: 5px;
+    }
+    @keyframes fly {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0); }
+    }
+    @media screen and (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .btn-print {
+        float: none;
+        width: 100%;
+        margin-top: 20px;
+      }
+      .sender-receiver {
+        flex-direction: column;
+      }
+      .sender-receiver div {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body onload="autoTrack()">
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/CMA_CGM_logo.svg/2560px-CMA_CGM_logo.svg.png" alt="CMA CGM Logo" />
+    <h1>Portal de Seguimiento</h1>
+  </header>
+
+  <div class="container">
+    <h2>Rastrea tu paquete</h2>
+    <input type="text" id="trackingInput" placeholder="Introduce tu código de seguimiento">
+    <button onclick="track()">Rastrear</button>
+
+    <div id="result" style="display:none;">
+      <button class="btn-print" onclick="window.print()">Imprimir</button>
+      <h3>Información del Seguimiento</h3>
+
+      <div class="notification" id="notify">
+        ✅ Tu paquete está actualmente en <strong>Aduana</strong>. Entrega estimada: <strong>3 de julio de 2025</strong>.
+      </div>
+
+      <div class="sender-receiver">
+        <div>
+          <h4><i class="fas fa-paper-plane flyover"></i> Remitente</h4>
+          <p><strong>Nombre:</strong> Min Jun</p>
+          <p><strong>Dirección:</strong> Londres, Reino Unido 🇬🇧</p>
+          <p><strong>Email:</strong> mjun2327@gmail.com</p>
+          <p><strong>Teléfono:</strong> +44 7985 293148</p>
+        </div>
+        <div>
+          <h4><i class="fas fa-location-dot flyover"></i> Destinatario</h4>
+          <p><strong>Nombre:</strong> Angela</p>
+          <p><strong>Dirección:</strong> TRV 15#15B-45, Nueva Florencia, Ciudad Forecia, Caquetá, Colombia 🇨🇴</p>
+          <p><strong>Email:</strong> rojasmolinaangelamaria@gmail.com</p>
+          <p><strong>Teléfono:</strong> +57 322 7075501</p>
+        </div>
+      </div>
+
+      <h3>Detalles del Paquete</h3>
+      <table class="horizontal-package-table">
+        <tr><th>Peso</th><th>Destino</th><th>Modo</th><th>Fecha de Entrega</th></tr>
+        <tr><td>23kg</td><td>Colombia</td><td>Carga</td><td>3 de julio de 2025</td></tr>
+      </table>
+
+      <h3>Estado del Paquete</h3>
+      <div class="progress-bar">
+        <div class="progress">En Aduana (70%)</div>
+      </div>
+
+      <h3>Ruta de Vuelo (Aeropuerto El Dorado ➝ Nueva Florencia)</h3>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d3975.8955955059196!2d-75.62988942415826!3d1.6124743616588596!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e3!4m5!1s0x8e3f9a7fcfffffff%3A0xf7c3d5c848731dea!2sAeropuerto%20Internacional%20El%20Dorado%2C%20Bogot%C3%A1%2C%20Colombia!3m2!1d4.7013896!2d-74.1468945!4m5!1s0x8e245da3eae6e979%3A0x6f9e8dbe4a676ef6!2sTRV%2015%2315B-45%2C%20Nueva%20Florencia%2C%20Caquet%C3%A1%2C%20Colombia!3m2!1d1.613003!2d-75.629646!5e0!3m2!1ses!2sco!4v1719858297980!5m2!1ses!2sco"
+        allowfullscreen loading="lazy"></iframe>
+      <div class="distance-info">✈️ Distancia estimada: <strong>619 km</strong> | Tiempo estimado de vuelo: <strong>1h 15min</strong></div>
+
+      <div class="footer">
+        GRACIAS POR USAR CMA-CGM
+      </div>
+    </div>
+  </div>
+
+  <audio id="pingSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_5cd75dcf46.mp3" preload="auto"></audio>
+
+  <script>
+    const realTrackingCode = "CMA2025CO9822FL";
+
+    function track() {
+      const input = document.getElementById("trackingInput").value.trim().toUpperCase();
+      const result = document.getElementById("result");
+
+      if (input === realTrackingCode) {
+        result.style.display = "block";
+        document.getElementById("pingSound").play();
+      } else {
+        alert("Código inválido. Inténtalo de nuevo.");
+        result.style.display = "none";
+      }
+    }
+
+    function autoTrack() {
+      setInterval(() => {
+        const input = document.getElementById("trackingInput").value.trim().toUpperCase();
+        if (input === realTrackingCode) {
+          track();
+        }
+      }, 10000);
+    }
+  </script>
+</body>
+</html>
